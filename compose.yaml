@@ -1,0 +1,37 @@
+include:
+    - database/db-compose.yaml
+    - jaeger/jaeger-compose.yaml
+
+services:
+    app:
+        container_name: app
+        profiles: [backend, full]
+        build:
+            context: backend
+            dockerfile: Dockerfile
+            target: final
+        env_file:
+            - ./.env.docker
+        expose:
+            - "8080"
+        depends_on:
+            db:
+                condition: service_healthy
+            jaeger:
+                condition: service_started
+            app_init:
+                condition: service_completed_successfully
+
+    app_init:
+        container_name: app_init
+        profiles: [backend, full]
+        build:
+            context: backend
+            dockerfile: Dockerfile
+            target: migrate
+        volumes:
+            - ./migrations:/migrations
+        env_file:
+            - ./.env.docker
+        depends_on:
+            - db

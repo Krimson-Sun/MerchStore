@@ -1,0 +1,245 @@
+syntax = "proto3";
+
+package merch_store.api.merch;
+
+option go_package = "merch-store/pkg/merch;merch";
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "validate/validate.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+    info: {
+      title: "Merch Store API"
+      version: "1.0.0"
+      description: "API for Merch Store service"
+    };
+    consumes: "application/json"
+    produces: "application/json"
+    base_path: "/api"
+    schemes: HTTP
+    schemes: HTTPS
+    security_definitions: {
+      security: {
+        key: "Bearer"
+        value: {
+          type: TYPE_API_KEY
+          in: IN_HEADER
+          name: "x-access-token"
+          description: "Bearer token for authentication"
+        }
+      }
+    }
+    security: {
+      security_requirement: {
+        key: "Bearer"
+        value: {
+  
+        }
+      }
+    }
+  };
+  
+  message User {
+    string id = 1;
+    string email = 2;
+    string first_name = 3;
+    string last_name = 4;
+    google.protobuf.Timestamp created_at = 5;
+    google.protobuf.Timestamp updated_at = 6;
+  }
+  
+  service UserService {
+    // Метод для создания пользователя
+    rpc CreateUser(CreateUserRequest) returns (UserResponse) {
+      option (google.api.http) = {
+        post: "/v1/users"
+        body: "*"
+      };
+    }
+    
+    // Метод для получения пользователя по ID
+    rpc GetUser(GetUserRequest) returns (UserResponse) {
+      option (google.api.http) = {
+        get: "/v1/users/{user_id}"
+      };
+    }
+    
+      // Метод для получения текущего пользователя
+      rpc GetMe(google.protobuf.Empty) returns (UserResponse) {
+        option (google.api.http) = {
+          get: "/v1/users/me"
+        };
+      }
+  
+    // Метод для обновления данных пользователя
+    rpc UpdateUser(UpdateUserRequest) returns (UserResponse) {
+      option (google.api.http) = {
+        put: "/v1/users"
+        body: "*"
+      };
+    }
+  }
+  
+  message CreateUserRequest {
+    string email = 1 [
+      (google.api.field_behavior) = REQUIRED,
+      (validate.rules).string.email = true
+    ];
+    string password = 2 [
+      (google.api.field_behavior) = REQUIRED,
+      (validate.rules).string.min_len = 8
+    ];
+    optional string first_name = 3;
+    optional string last_name = 4;
+  }
+  
+  message GetUserRequest {
+    string user_id = 1 [
+      (google.api.field_behavior) = REQUIRED
+    ];
+  }
+  
+  message UpdateUserRequest {
+    optional string first_name = 4 [
+      (validate.rules).string.min_len = 1
+    ];
+    optional string last_name = 5 [
+      (validate.rules).string.min_len = 1
+    ];
+  }
+  
+  message DeleteUserRequest {
+    string user_id = 1 [
+      (google.api.field_behavior) = REQUIRED
+    ];
+  }
+  
+  message UserResponse {
+    User user = 1;
+  }
+  
+  service AuthService {
+    // Метод для получения токенов доступа и обновления
+    rpc Login(LoginRequest) returns (LoginResponse) {
+      option (google.api.http) = {
+        post: "/v1/auth/login"
+        body: "*"
+      };
+    }
+  
+    // Метод для обновления токенов доступа и обновления
+    rpc Refresh(RefreshRequest) returns (RefreshResponse) {
+      option (google.api.http) = {
+        post: "/v1/auth/refresh"
+        body: "*"
+      };
+    }
+  
+    // Метод для инвалидации токена обновления
+    rpc Logout(LogoutRequest) returns (google.protobuf.Empty) {
+      option (google.api.http) = {
+        post: "/v1/auth/logout"
+        body: "*"
+      };
+    }
+  }
+  
+  message TokensPair {
+    string access_token = 1 [
+      (google.api.field_behavior) = REQUIRED
+    ];
+    string refresh_token = 2 [
+      (google.api.field_behavior) = REQUIRED
+    ];
+  }
+  
+  message LoginRequest {
+    string email = 1 [
+      (google.api.field_behavior) = REQUIRED,
+      (validate.rules).string.email = true
+    ];
+    string password = 2 [
+      (google.api.field_behavior) = REQUIRED
+    ];
+  }
+  
+  message LoginResponse {
+    TokensPair tokens = 1;
+  }
+  
+  message RefreshRequest {
+    TokensPair tokens = 1;
+  }
+  
+  message RefreshResponse {
+    TokensPair tokens = 1;
+  }
+  
+  message LogoutRequest {
+    string refresh_token = 1 [
+      (google.api.field_behavior) = REQUIRED
+    ];
+  }
+
+  // Сервисы и сообщения согласно Swagger-документации example.json
+  service MerchService {
+    // Получение информации о монетах, инвентаре и истории транзакций
+    rpc GetInfo(google.protobuf.Empty) returns (InfoResponse) {
+      option (google.api.http) = {
+        get: "/v1/info"
+      };
+    }
+    // Отправка монет другому пользователю
+    rpc SendCoin(SendCoinRequest) returns (google.protobuf.Empty) {
+      option (google.api.http) = {
+        post: "/v1/coins/send"
+        body: "*"
+      };
+    }
+    // Покупка предмета за монеты
+    rpc Buy(BuyRequest) returns (google.protobuf.Empty) {
+      option (google.api.http) = {
+        get: "/v1/buy/{item}"
+      };
+    }
+  }
+
+  // Ответ с информацией о монетах, инвентаре и истории транзакций
+  message InfoResponse {
+    int32 coins = 1;
+    repeated InventoryItem inventory = 2;
+    CoinHistory coin_history = 3;
+  }
+
+  // Элемент инвентаря
+  message InventoryItem {
+    string type = 1;
+    int32 quantity = 2;
+  }
+
+  // История транзакций монет
+  message CoinHistory {
+    repeated CoinRecord received = 1;
+    repeated CoinRecord sent = 2;
+  }
+
+  // Запись о транзакции монет
+  message CoinRecord {
+    string user = 1;
+    int32 amount = 2;
+  }
+
+  // Запрос на отправку монет
+  message SendCoinRequest {
+    string to_user = 1 [(google.api.field_behavior) = REQUIRED];
+    int32 amount = 2 [(google.api.field_behavior) = REQUIRED];
+  }
+
+  // Запрос на покупку предмета
+  message BuyRequest {
+    string item = 1 [(google.api.field_behavior) = REQUIRED];
+  }
