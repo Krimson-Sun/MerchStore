@@ -14,8 +14,8 @@ import (
 )
 
 const (
-	userIDKey            contextKey = "auth-interceptor.user-id"
-	accesTokenHeaderName string     = "x-access-token"
+	userIDKey             contextKey = "auth-interceptor.user-id"
+	accessTokenHeaderName string     = "x-access-token"
 )
 
 type JWTManager interface {
@@ -42,7 +42,7 @@ func NewAuth(
 			return nil, status.Error(codes.Unauthenticated, "metadata is not provided")
 		}
 
-		token, ok := md[accesTokenHeaderName]
+		token, ok := md[accessTokenHeaderName]
 		if !ok {
 			logger.Errorf("authorization token is not provided")
 			return nil, status.Error(codes.Unauthenticated, "authorization token is not provided")

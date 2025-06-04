@@ -1,6 +1,8 @@
 package domain
 
 import (
+	"errors"
+	"regexp"
 	"time"
 
 	"github.com/google/uuid"
@@ -82,4 +84,36 @@ func NewSession(userID ID, expiredAt time.Time, token string) Session {
 type Tokens struct {
 	AccessToken  string
 	RefreshToken string
+}
+
+type Item struct {
+	Model
+	Name        string
+	Description string
+	ImageURL    string
+	Price       int
+	InStock     int
+}
+
+func NewItem(name string, description string, imageURL string, price int, inStock int) (Item, error) {
+	if name == "" {
+		return Item{}, errors.New("Item: name cannot be empty")
+	}
+	if price <= 0 {
+		return Item{}, errors.New("Item: price must be greater than zero")
+	}
+	if imageURL != "" {
+		matched, _ := regexp.MatchString(`^https?://`, imageURL)
+		if !matched {
+			return Item{}, errors.New("Item: image URL must start with http:// or https://")
+		}
+	}
+	return Item{
+		Model:       NewModel(),
+		Name:        name,
+		Description: description,
+		ImageURL:    imageURL,
+		Price:       price,
+		InStock:     inStock,
+	}, nil
 }

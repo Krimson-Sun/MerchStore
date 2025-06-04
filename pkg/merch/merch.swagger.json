@@ -14,6 +14,9 @@
     },
     {
       "name": "MerchService"
+    },
+    {
+      "name": "CartService"
     }
   ],
   "basePath": "/api",
@@ -30,6 +33,7 @@
   "paths": {
     "/v1/auth/login": {
       "post": {
+        "summary": "Метод для получения токенов доступа и обновления",
         "operationId": "AuthService_Login",
         "responses": {
           "200": {
@@ -62,6 +66,7 @@
     },
     "/v1/auth/logout": {
       "post": {
+        "summary": "Метод для инвалидации токена обновления",
         "operationId": "AuthService_Logout",
         "responses": {
           "200": {
@@ -95,6 +100,7 @@
     },
     "/v1/auth/refresh": {
       "post": {
+        "summary": "Метод для обновления токенов доступа и обновления",
         "operationId": "AuthService_Refresh",
         "responses": {
           "200": {
@@ -125,10 +131,29 @@
         ]
       }
     },
-    "/v1/buy/{item}": {
+    "/v1/cart": {
       "get": {
-        "summary": "Покупка предмета за монеты",
-        "operationId": "MerchService_Buy",
+        "operationId": "CartService_GetCart",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/merchGetCartResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "CartService"
+        ]
+      },
+      "delete": {
+        "operationId": "CartService_ClearCart",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -144,23 +169,12 @@
             }
           }
         },
-        "parameters": [
-          {
-            "name": "item",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
         "tags": [
-          "MerchService"
+          "CartService"
         ]
-      }
-    },
-    "/v1/coins/send": {
+      },
       "post": {
-        "summary": "Отправка монет другому пользователю",
-        "operationId": "MerchService_SendCoin",
+        "operationId": "CartService_AddItem",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -182,24 +196,23 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/merchSendCoinRequest"
+              "$ref": "#/definitions/merchAddItemRequest"
             }
           }
         ],
         "tags": [
-          "MerchService"
+          "CartService"
         ]
       }
     },
-    "/v1/info": {
+    "/v1/cart/total": {
       "get": {
-        "summary": "Получение информации о монетах, инвентаре и истории транзакций",
-        "operationId": "MerchService_GetInfo",
+        "operationId": "CartService_GetCartTotal",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/merchInfoResponse"
+              "$ref": "#/definitions/merchGetCartTotalResponse"
             }
           },
           "default": {
@@ -209,6 +222,202 @@
             }
           }
         },
+        "tags": [
+          "CartService"
+        ]
+      }
+    },
+    "/v1/cart/{itemId}": {
+      "delete": {
+        "operationId": "CartService_RemoveItem",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "itemId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "CartService"
+        ]
+      }
+    },
+    "/v1/catalog": {
+      "post": {
+        "operationId": "MerchService_GetCatalog",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/merchGetCatalogResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "pagination.page",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "pagination.size",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "MerchService"
+        ]
+      }
+    },
+    "/v1/items": {
+      "post": {
+        "operationId": "MerchService_CreateItem",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/merchItem"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/merchCreateItemRequest"
+            }
+          }
+        ],
+        "tags": [
+          "MerchService"
+        ]
+      }
+    },
+    "/v1/items/{itemId}": {
+      "get": {
+        "operationId": "MerchService_GetItem",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/merchItem"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "itemId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "MerchService"
+        ]
+      },
+      "delete": {
+        "operationId": "MerchService_DeleteItem",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "itemId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "MerchService"
+        ]
+      },
+      "put": {
+        "operationId": "MerchService_UpdateItem",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/merchItem"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "itemId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/MerchServiceUpdateItemBody"
+            }
+          }
+        ],
         "tags": [
           "MerchService"
         ]
@@ -334,38 +543,64 @@
     }
   },
   "definitions": {
-    "merchCoinHistory": {
+    "MerchServiceUpdateItemBody": {
       "type": "object",
       "properties": {
-        "received": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/merchCoinRecord"
-          }
-        },
-        "sent": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/merchCoinRecord"
-          }
-        }
-      },
-      "title": "История транзакций монет"
-    },
-    "merchCoinRecord": {
-      "type": "object",
-      "properties": {
-        "user": {
+        "name": {
           "type": "string"
         },
-        "amount": {
+        "description": {
+          "type": "string"
+        },
+        "imageUrl": {
+          "type": "string"
+        },
+        "price": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "inStock": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "merchAddItemRequest": {
+      "type": "object",
+      "properties": {
+        "itemId": {
+          "type": "string"
+        },
+        "quantity": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "merchCreateItemRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "imageUrl": {
+          "type": "string"
+        },
+        "price": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "inStock": {
           "type": "integer",
           "format": "int32"
         }
       },
-      "title": "Запись о транзакции монет"
+      "required": [
+        "name"
+      ]
     },
     "merchCreateUserRequest": {
       "type": "object",
@@ -388,38 +623,83 @@
         "password"
       ]
     },
-    "merchInfoResponse": {
+    "merchGetCartResponse": {
       "type": "object",
       "properties": {
-        "coins": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "inventory": {
+        "items": {
           "type": "array",
           "items": {
             "type": "object",
-            "$ref": "#/definitions/merchInventoryItem"
+            "$ref": "#/definitions/merchItem"
           }
         },
-        "coinHistory": {
-          "$ref": "#/definitions/merchCoinHistory"
-        }
-      },
-      "title": "Ответ с информацией о монетах, инвентаре и истории транзакций"
-    },
-    "merchInventoryItem": {
-      "type": "object",
-      "properties": {
-        "type": {
-          "type": "string"
+        "totalQuantity": {
+          "type": "integer",
+          "format": "int32"
         },
-        "quantity": {
+        "totalPrice": {
           "type": "integer",
           "format": "int32"
         }
-      },
-      "title": "Элемент инвентаря"
+      }
+    },
+    "merchGetCartTotalResponse": {
+      "type": "object",
+      "properties": {
+        "totalQuantity": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "totalPrice": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "merchGetCatalogResponse": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/merchItem"
+          }
+        }
+      }
+    },
+    "merchItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "imageUrl": {
+          "type": "string"
+        },
+        "price": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "inStock": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
     },
     "merchLoginRequest": {
       "type": "object",
@@ -455,6 +735,19 @@
         "refreshToken"
       ]
     },
+    "merchPagination": {
+      "type": "object",
+      "properties": {
+        "page": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "size": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
     "merchRefreshRequest": {
       "type": "object",
       "properties": {
@@ -470,23 +763,6 @@
           "$ref": "#/definitions/merchTokensPair"
         }
       }
-    },
-    "merchSendCoinRequest": {
-      "type": "object",
-      "properties": {
-        "toUser": {
-          "type": "string"
-        },
-        "amount": {
-          "type": "integer",
-          "format": "int32"
-        }
-      },
-      "title": "Запрос на отправку монет",
-      "required": [
-        "toUser",
-        "amount"
-      ]
     },
     "merchTokensPair": {
       "type": "object",

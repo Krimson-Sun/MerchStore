@@ -642,30 +642,27 @@ func (x *LogoutRequest) GetRefreshToken() string {
 	return ""
 }
 
-// Ответ с информацией о монетах, инвентаре и истории транзакций
-type InfoResponse struct {
+type DeleteItemRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Coins         int32                  `protobuf:"varint,1,opt,name=coins,proto3" json:"coins,omitempty"`
-	Inventory     []*InventoryItem       `protobuf:"bytes,2,rep,name=inventory,proto3" json:"inventory,omitempty"`
-	CoinHistory   *CoinHistory           `protobuf:"bytes,3,opt,name=coin_history,json=coinHistory,proto3" json:"coin_history,omitempty"`
+	ItemId        string                 `protobuf:"bytes,1,opt,name=item_id,json=itemId,proto3" json:"item_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *InfoResponse) Reset() {
-	*x = InfoResponse{}
+func (x *DeleteItemRequest) Reset() {
+	*x = DeleteItemRequest{}
 	mi := &file_merch_merch_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *InfoResponse) String() string {
+func (x *DeleteItemRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*InfoResponse) ProtoMessage() {}
+func (*DeleteItemRequest) ProtoMessage() {}
 
-func (x *InfoResponse) ProtoReflect() protoreflect.Message {
+func (x *DeleteItemRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_merch_merch_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -677,56 +674,485 @@ func (x *InfoResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use InfoResponse.ProtoReflect.Descriptor instead.
-func (*InfoResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use DeleteItemRequest.ProtoReflect.Descriptor instead.
+func (*DeleteItemRequest) Descriptor() ([]byte, []int) {
 	return file_merch_merch_proto_rawDescGZIP(), []int{12}
 }
 
-func (x *InfoResponse) GetCoins() int32 {
+func (x *DeleteItemRequest) GetItemId() string {
 	if x != nil {
-		return x.Coins
+		return x.ItemId
+	}
+	return ""
+}
+
+type UpdateItemRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	ItemId        string                 `protobuf:"bytes,1,opt,name=item_id,json=itemId,proto3" json:"item_id,omitempty"`
+	Name          *string                `protobuf:"bytes,2,opt,name=name,proto3,oneof" json:"name,omitempty"`
+	Description   *string                `protobuf:"bytes,3,opt,name=description,proto3,oneof" json:"description,omitempty"`
+	ImageUrl      *string                `protobuf:"bytes,4,opt,name=image_url,json=imageUrl,proto3,oneof" json:"image_url,omitempty"`
+	Price         *int32                 `protobuf:"varint,5,opt,name=price,proto3,oneof" json:"price,omitempty"`
+	InStock       *int32                 `protobuf:"varint,6,opt,name=in_stock,json=inStock,proto3,oneof" json:"in_stock,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdateItemRequest) Reset() {
+	*x = UpdateItemRequest{}
+	mi := &file_merch_merch_proto_msgTypes[13]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateItemRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateItemRequest) ProtoMessage() {}
+
+func (x *UpdateItemRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_merch_merch_proto_msgTypes[13]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateItemRequest.ProtoReflect.Descriptor instead.
+func (*UpdateItemRequest) Descriptor() ([]byte, []int) {
+	return file_merch_merch_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *UpdateItemRequest) GetItemId() string {
+	if x != nil {
+		return x.ItemId
+	}
+	return ""
+}
+
+func (x *UpdateItemRequest) GetName() string {
+	if x != nil && x.Name != nil {
+		return *x.Name
+	}
+	return ""
+}
+
+func (x *UpdateItemRequest) GetDescription() string {
+	if x != nil && x.Description != nil {
+		return *x.Description
+	}
+	return ""
+}
+
+func (x *UpdateItemRequest) GetImageUrl() string {
+	if x != nil && x.ImageUrl != nil {
+		return *x.ImageUrl
+	}
+	return ""
+}
+
+func (x *UpdateItemRequest) GetPrice() int32 {
+	if x != nil && x.Price != nil {
+		return *x.Price
 	}
 	return 0
 }
 
-func (x *InfoResponse) GetInventory() []*InventoryItem {
-	if x != nil {
-		return x.Inventory
+func (x *UpdateItemRequest) GetInStock() int32 {
+	if x != nil && x.InStock != nil {
+		return *x.InStock
 	}
-	return nil
+	return 0
 }
 
-func (x *InfoResponse) GetCoinHistory() *CoinHistory {
-	if x != nil {
-		return x.CoinHistory
-	}
-	return nil
-}
-
-// Элемент инвентаря
-type InventoryItem struct {
+type CreateItemRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Type          string                 `protobuf:"bytes,1,opt,name=type,proto3" json:"type,omitempty"`
+	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Description   *string                `protobuf:"bytes,2,opt,name=description,proto3,oneof" json:"description,omitempty"`
+	ImageUrl      string                 `protobuf:"bytes,3,opt,name=image_url,json=imageUrl,proto3" json:"image_url,omitempty"`
+	Price         int32                  `protobuf:"varint,4,opt,name=price,proto3" json:"price,omitempty"`
+	InStock       int32                  `protobuf:"varint,5,opt,name=in_stock,json=inStock,proto3" json:"in_stock,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CreateItemRequest) Reset() {
+	*x = CreateItemRequest{}
+	mi := &file_merch_merch_proto_msgTypes[14]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateItemRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateItemRequest) ProtoMessage() {}
+
+func (x *CreateItemRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_merch_merch_proto_msgTypes[14]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateItemRequest.ProtoReflect.Descriptor instead.
+func (*CreateItemRequest) Descriptor() ([]byte, []int) {
+	return file_merch_merch_proto_rawDescGZIP(), []int{14}
+}
+
+func (x *CreateItemRequest) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *CreateItemRequest) GetDescription() string {
+	if x != nil && x.Description != nil {
+		return *x.Description
+	}
+	return ""
+}
+
+func (x *CreateItemRequest) GetImageUrl() string {
+	if x != nil {
+		return x.ImageUrl
+	}
+	return ""
+}
+
+func (x *CreateItemRequest) GetPrice() int32 {
+	if x != nil {
+		return x.Price
+	}
+	return 0
+}
+
+func (x *CreateItemRequest) GetInStock() int32 {
+	if x != nil {
+		return x.InStock
+	}
+	return 0
+}
+
+type GetItemRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	ItemId        string                 `protobuf:"bytes,1,opt,name=item_id,json=itemId,proto3" json:"item_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetItemRequest) Reset() {
+	*x = GetItemRequest{}
+	mi := &file_merch_merch_proto_msgTypes[15]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetItemRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetItemRequest) ProtoMessage() {}
+
+func (x *GetItemRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_merch_merch_proto_msgTypes[15]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetItemRequest.ProtoReflect.Descriptor instead.
+func (*GetItemRequest) Descriptor() ([]byte, []int) {
+	return file_merch_merch_proto_rawDescGZIP(), []int{15}
+}
+
+func (x *GetItemRequest) GetItemId() string {
+	if x != nil {
+		return x.ItemId
+	}
+	return ""
+}
+
+type GetCatalogRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Pagination    *Pagination            `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetCatalogRequest) Reset() {
+	*x = GetCatalogRequest{}
+	mi := &file_merch_merch_proto_msgTypes[16]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetCatalogRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetCatalogRequest) ProtoMessage() {}
+
+func (x *GetCatalogRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_merch_merch_proto_msgTypes[16]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetCatalogRequest.ProtoReflect.Descriptor instead.
+func (*GetCatalogRequest) Descriptor() ([]byte, []int) {
+	return file_merch_merch_proto_rawDescGZIP(), []int{16}
+}
+
+func (x *GetCatalogRequest) GetPagination() *Pagination {
+	if x != nil {
+		return x.Pagination
+	}
+	return nil
+}
+
+type Pagination struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Page          int32                  `protobuf:"varint,1,opt,name=page,proto3" json:"page,omitempty"`
+	Size          int32                  `protobuf:"varint,2,opt,name=size,proto3" json:"size,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Pagination) Reset() {
+	*x = Pagination{}
+	mi := &file_merch_merch_proto_msgTypes[17]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Pagination) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Pagination) ProtoMessage() {}
+
+func (x *Pagination) ProtoReflect() protoreflect.Message {
+	mi := &file_merch_merch_proto_msgTypes[17]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Pagination.ProtoReflect.Descriptor instead.
+func (*Pagination) Descriptor() ([]byte, []int) {
+	return file_merch_merch_proto_rawDescGZIP(), []int{17}
+}
+
+func (x *Pagination) GetPage() int32 {
+	if x != nil {
+		return x.Page
+	}
+	return 0
+}
+
+func (x *Pagination) GetSize() int32 {
+	if x != nil {
+		return x.Size
+	}
+	return 0
+}
+
+type GetCatalogResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Items         []*Item                `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetCatalogResponse) Reset() {
+	*x = GetCatalogResponse{}
+	mi := &file_merch_merch_proto_msgTypes[18]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetCatalogResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetCatalogResponse) ProtoMessage() {}
+
+func (x *GetCatalogResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_merch_merch_proto_msgTypes[18]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetCatalogResponse.ProtoReflect.Descriptor instead.
+func (*GetCatalogResponse) Descriptor() ([]byte, []int) {
+	return file_merch_merch_proto_rawDescGZIP(), []int{18}
+}
+
+func (x *GetCatalogResponse) GetItems() []*Item {
+	if x != nil {
+		return x.Items
+	}
+	return nil
+}
+
+type Item struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Description   string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
+	ImageUrl      string                 `protobuf:"bytes,4,opt,name=image_url,json=imageUrl,proto3" json:"image_url,omitempty"`
+	Price         int32                  `protobuf:"varint,5,opt,name=price,proto3" json:"price,omitempty"`
+	InStock       int32                  `protobuf:"varint,6,opt,name=in_stock,json=inStock,proto3" json:"in_stock,omitempty"`
+	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	UpdatedAt     *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Item) Reset() {
+	*x = Item{}
+	mi := &file_merch_merch_proto_msgTypes[19]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Item) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Item) ProtoMessage() {}
+
+func (x *Item) ProtoReflect() protoreflect.Message {
+	mi := &file_merch_merch_proto_msgTypes[19]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Item.ProtoReflect.Descriptor instead.
+func (*Item) Descriptor() ([]byte, []int) {
+	return file_merch_merch_proto_rawDescGZIP(), []int{19}
+}
+
+func (x *Item) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *Item) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *Item) GetDescription() string {
+	if x != nil {
+		return x.Description
+	}
+	return ""
+}
+
+func (x *Item) GetImageUrl() string {
+	if x != nil {
+		return x.ImageUrl
+	}
+	return ""
+}
+
+func (x *Item) GetPrice() int32 {
+	if x != nil {
+		return x.Price
+	}
+	return 0
+}
+
+func (x *Item) GetInStock() int32 {
+	if x != nil {
+		return x.InStock
+	}
+	return 0
+}
+
+func (x *Item) GetCreatedAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.CreatedAt
+	}
+	return nil
+}
+
+func (x *Item) GetUpdatedAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.UpdatedAt
+	}
+	return nil
+}
+
+type AddItemRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	ItemId        string                 `protobuf:"bytes,1,opt,name=item_id,json=itemId,proto3" json:"item_id,omitempty"`
 	Quantity      int32                  `protobuf:"varint,2,opt,name=quantity,proto3" json:"quantity,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *InventoryItem) Reset() {
-	*x = InventoryItem{}
-	mi := &file_merch_merch_proto_msgTypes[13]
+func (x *AddItemRequest) Reset() {
+	*x = AddItemRequest{}
+	mi := &file_merch_merch_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *InventoryItem) String() string {
+func (x *AddItemRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*InventoryItem) ProtoMessage() {}
+func (*AddItemRequest) ProtoMessage() {}
 
-func (x *InventoryItem) ProtoReflect() protoreflect.Message {
-	mi := &file_merch_merch_proto_msgTypes[13]
+func (x *AddItemRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_merch_merch_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -737,49 +1163,47 @@ func (x *InventoryItem) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use InventoryItem.ProtoReflect.Descriptor instead.
-func (*InventoryItem) Descriptor() ([]byte, []int) {
-	return file_merch_merch_proto_rawDescGZIP(), []int{13}
+// Deprecated: Use AddItemRequest.ProtoReflect.Descriptor instead.
+func (*AddItemRequest) Descriptor() ([]byte, []int) {
+	return file_merch_merch_proto_rawDescGZIP(), []int{20}
 }
 
-func (x *InventoryItem) GetType() string {
+func (x *AddItemRequest) GetItemId() string {
 	if x != nil {
-		return x.Type
+		return x.ItemId
 	}
 	return ""
 }
 
-func (x *InventoryItem) GetQuantity() int32 {
+func (x *AddItemRequest) GetQuantity() int32 {
 	if x != nil {
 		return x.Quantity
 	}
 	return 0
 }
 
-// История транзакций монет
-type CoinHistory struct {
+type RemoveItemRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Received      []*CoinRecord          `protobuf:"bytes,1,rep,name=received,proto3" json:"received,omitempty"`
-	Sent          []*CoinRecord          `protobuf:"bytes,2,rep,name=sent,proto3" json:"sent,omitempty"`
+	ItemId        string                 `protobuf:"bytes,1,opt,name=item_id,json=itemId,proto3" json:"item_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *CoinHistory) Reset() {
-	*x = CoinHistory{}
-	mi := &file_merch_merch_proto_msgTypes[14]
+func (x *RemoveItemRequest) Reset() {
+	*x = RemoveItemRequest{}
+	mi := &file_merch_merch_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *CoinHistory) String() string {
+func (x *RemoveItemRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*CoinHistory) ProtoMessage() {}
+func (*RemoveItemRequest) ProtoMessage() {}
 
-func (x *CoinHistory) ProtoReflect() protoreflect.Message {
-	mi := &file_merch_merch_proto_msgTypes[14]
+func (x *RemoveItemRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_merch_merch_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -790,154 +1214,101 @@ func (x *CoinHistory) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use CoinHistory.ProtoReflect.Descriptor instead.
-func (*CoinHistory) Descriptor() ([]byte, []int) {
-	return file_merch_merch_proto_rawDescGZIP(), []int{14}
+// Deprecated: Use RemoveItemRequest.ProtoReflect.Descriptor instead.
+func (*RemoveItemRequest) Descriptor() ([]byte, []int) {
+	return file_merch_merch_proto_rawDescGZIP(), []int{21}
 }
 
-func (x *CoinHistory) GetReceived() []*CoinRecord {
+func (x *RemoveItemRequest) GetItemId() string {
 	if x != nil {
-		return x.Received
+		return x.ItemId
+	}
+	return ""
+}
+
+type GetCartResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Items         []*Item                `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
+	TotalQuantity int32                  `protobuf:"varint,2,opt,name=total_quantity,json=totalQuantity,proto3" json:"total_quantity,omitempty"`
+	TotalPrice    int32                  `protobuf:"varint,3,opt,name=total_price,json=totalPrice,proto3" json:"total_price,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetCartResponse) Reset() {
+	*x = GetCartResponse{}
+	mi := &file_merch_merch_proto_msgTypes[22]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetCartResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetCartResponse) ProtoMessage() {}
+
+func (x *GetCartResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_merch_merch_proto_msgTypes[22]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetCartResponse.ProtoReflect.Descriptor instead.
+func (*GetCartResponse) Descriptor() ([]byte, []int) {
+	return file_merch_merch_proto_rawDescGZIP(), []int{22}
+}
+
+func (x *GetCartResponse) GetItems() []*Item {
+	if x != nil {
+		return x.Items
 	}
 	return nil
 }
 
-func (x *CoinHistory) GetSent() []*CoinRecord {
+func (x *GetCartResponse) GetTotalQuantity() int32 {
 	if x != nil {
-		return x.Sent
-	}
-	return nil
-}
-
-// Запись о транзакции монет
-type CoinRecord struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	User          string                 `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
-	Amount        int32                  `protobuf:"varint,2,opt,name=amount,proto3" json:"amount,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *CoinRecord) Reset() {
-	*x = CoinRecord{}
-	mi := &file_merch_merch_proto_msgTypes[15]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *CoinRecord) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*CoinRecord) ProtoMessage() {}
-
-func (x *CoinRecord) ProtoReflect() protoreflect.Message {
-	mi := &file_merch_merch_proto_msgTypes[15]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use CoinRecord.ProtoReflect.Descriptor instead.
-func (*CoinRecord) Descriptor() ([]byte, []int) {
-	return file_merch_merch_proto_rawDescGZIP(), []int{15}
-}
-
-func (x *CoinRecord) GetUser() string {
-	if x != nil {
-		return x.User
-	}
-	return ""
-}
-
-func (x *CoinRecord) GetAmount() int32 {
-	if x != nil {
-		return x.Amount
+		return x.TotalQuantity
 	}
 	return 0
 }
 
-// Запрос на отправку монет
-type SendCoinRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	ToUser        string                 `protobuf:"bytes,1,opt,name=to_user,json=toUser,proto3" json:"to_user,omitempty"`
-	Amount        int32                  `protobuf:"varint,2,opt,name=amount,proto3" json:"amount,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *SendCoinRequest) Reset() {
-	*x = SendCoinRequest{}
-	mi := &file_merch_merch_proto_msgTypes[16]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *SendCoinRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*SendCoinRequest) ProtoMessage() {}
-
-func (x *SendCoinRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_merch_merch_proto_msgTypes[16]
+func (x *GetCartResponse) GetTotalPrice() int32 {
 	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use SendCoinRequest.ProtoReflect.Descriptor instead.
-func (*SendCoinRequest) Descriptor() ([]byte, []int) {
-	return file_merch_merch_proto_rawDescGZIP(), []int{16}
-}
-
-func (x *SendCoinRequest) GetToUser() string {
-	if x != nil {
-		return x.ToUser
-	}
-	return ""
-}
-
-func (x *SendCoinRequest) GetAmount() int32 {
-	if x != nil {
-		return x.Amount
+		return x.TotalPrice
 	}
 	return 0
 }
 
-// Запрос на покупку предмета
-type BuyRequest struct {
+type GetCartTotalResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Item          string                 `protobuf:"bytes,1,opt,name=item,proto3" json:"item,omitempty"`
+	TotalQuantity int32                  `protobuf:"varint,1,opt,name=total_quantity,json=totalQuantity,proto3" json:"total_quantity,omitempty"`
+	TotalPrice    int32                  `protobuf:"varint,2,opt,name=total_price,json=totalPrice,proto3" json:"total_price,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *BuyRequest) Reset() {
-	*x = BuyRequest{}
-	mi := &file_merch_merch_proto_msgTypes[17]
+func (x *GetCartTotalResponse) Reset() {
+	*x = GetCartTotalResponse{}
+	mi := &file_merch_merch_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *BuyRequest) String() string {
+func (x *GetCartTotalResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*BuyRequest) ProtoMessage() {}
+func (*GetCartTotalResponse) ProtoMessage() {}
 
-func (x *BuyRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_merch_merch_proto_msgTypes[17]
+func (x *GetCartTotalResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_merch_merch_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -948,16 +1319,23 @@ func (x *BuyRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use BuyRequest.ProtoReflect.Descriptor instead.
-func (*BuyRequest) Descriptor() ([]byte, []int) {
-	return file_merch_merch_proto_rawDescGZIP(), []int{17}
+// Deprecated: Use GetCartTotalResponse.ProtoReflect.Descriptor instead.
+func (*GetCartTotalResponse) Descriptor() ([]byte, []int) {
+	return file_merch_merch_proto_rawDescGZIP(), []int{23}
 }
 
-func (x *BuyRequest) GetItem() string {
+func (x *GetCartTotalResponse) GetTotalQuantity() int32 {
 	if x != nil {
-		return x.Item
+		return x.TotalQuantity
 	}
-	return ""
+	return 0
+}
+
+func (x *GetCartTotalResponse) GetTotalPrice() int32 {
+	if x != nil {
+		return x.TotalPrice
+	}
+	return 0
 }
 
 var File_merch_merch_proto protoreflect.FileDescriptor
@@ -1014,27 +1392,66 @@ const file_merch_merch_proto_rawDesc = "" +
 	"\x0fRefreshResponse\x129\n" +
 	"\x06tokens\x18\x01 \x01(\v2!.merch_store.api.merch.TokensPairR\x06tokens\"9\n" +
 	"\rLogoutRequest\x12(\n" +
-	"\rrefresh_token\x18\x01 \x01(\tB\x03\xe0A\x02R\frefreshToken\"\xaf\x01\n" +
-	"\fInfoResponse\x12\x14\n" +
-	"\x05coins\x18\x01 \x01(\x05R\x05coins\x12B\n" +
-	"\tinventory\x18\x02 \x03(\v2$.merch_store.api.merch.InventoryItemR\tinventory\x12E\n" +
-	"\fcoin_history\x18\x03 \x01(\v2\".merch_store.api.merch.CoinHistoryR\vcoinHistory\"?\n" +
-	"\rInventoryItem\x12\x12\n" +
-	"\x04type\x18\x01 \x01(\tR\x04type\x12\x1a\n" +
-	"\bquantity\x18\x02 \x01(\x05R\bquantity\"\x83\x01\n" +
-	"\vCoinHistory\x12=\n" +
-	"\breceived\x18\x01 \x03(\v2!.merch_store.api.merch.CoinRecordR\breceived\x125\n" +
-	"\x04sent\x18\x02 \x03(\v2!.merch_store.api.merch.CoinRecordR\x04sent\"8\n" +
+	"\rrefresh_token\x18\x01 \x01(\tB\x03\xe0A\x02R\frefreshToken\"1\n" +
+	"\x11DeleteItemRequest\x12\x1c\n" +
+	"\aitem_id\x18\x01 \x01(\tB\x03\xe0A\x02R\x06itemId\"\x99\x02\n" +
+	"\x11UpdateItemRequest\x12\x17\n" +
+	"\aitem_id\x18\x01 \x01(\tR\x06itemId\x12\x17\n" +
+	"\x04name\x18\x02 \x01(\tH\x00R\x04name\x88\x01\x01\x12%\n" +
+	"\vdescription\x18\x03 \x01(\tH\x01R\vdescription\x88\x01\x01\x12 \n" +
+	"\timage_url\x18\x04 \x01(\tH\x02R\bimageUrl\x88\x01\x01\x12\"\n" +
+	"\x05price\x18\x05 \x01(\x05B\a\xfaB\x04\x1a\x02 \x00H\x03R\x05price\x88\x01\x01\x12'\n" +
+	"\bin_stock\x18\x06 \x01(\x05B\a\xfaB\x04\x1a\x02 \x00H\x04R\ainStock\x88\x01\x01B\a\n" +
+	"\x05_nameB\x0e\n" +
+	"\f_descriptionB\f\n" +
 	"\n" +
-	"CoinRecord\x12\x12\n" +
-	"\x04user\x18\x01 \x01(\tR\x04user\x12\x16\n" +
-	"\x06amount\x18\x02 \x01(\x05R\x06amount\"L\n" +
-	"\x0fSendCoinRequest\x12\x1c\n" +
-	"\ato_user\x18\x01 \x01(\tB\x03\xe0A\x02R\x06toUser\x12\x1b\n" +
-	"\x06amount\x18\x02 \x01(\x05B\x03\xe0A\x02R\x06amount\"%\n" +
+	"_image_urlB\b\n" +
+	"\x06_priceB\v\n" +
+	"\t_in_stock\"\xc3\x01\n" +
+	"\x11CreateItemRequest\x12\x17\n" +
+	"\x04name\x18\x01 \x01(\tB\x03\xe0A\x02R\x04name\x12%\n" +
+	"\vdescription\x18\x02 \x01(\tH\x00R\vdescription\x88\x01\x01\x12\x1b\n" +
+	"\timage_url\x18\x03 \x01(\tR\bimageUrl\x12\x1d\n" +
+	"\x05price\x18\x04 \x01(\x05B\a\xfaB\x04\x1a\x02 \x00R\x05price\x12\"\n" +
+	"\bin_stock\x18\x05 \x01(\x05B\a\xfaB\x04\x1a\x02 \x00R\ainStockB\x0e\n" +
+	"\f_description\".\n" +
+	"\x0eGetItemRequest\x12\x1c\n" +
+	"\aitem_id\x18\x01 \x01(\tB\x03\xe0A\x02R\x06itemId\"V\n" +
+	"\x11GetCatalogRequest\x12A\n" +
 	"\n" +
-	"BuyRequest\x12\x17\n" +
-	"\x04item\x18\x01 \x01(\tB\x03\xe0A\x02R\x04item2\xc3\x03\n" +
+	"pagination\x18\x01 \x01(\v2!.merch_store.api.merch.PaginationR\n" +
+	"pagination\"4\n" +
+	"\n" +
+	"Pagination\x12\x12\n" +
+	"\x04page\x18\x01 \x01(\x05R\x04page\x12\x12\n" +
+	"\x04size\x18\x02 \x01(\x05R\x04size\"G\n" +
+	"\x12GetCatalogResponse\x121\n" +
+	"\x05items\x18\x01 \x03(\v2\x1b.merch_store.api.merch.ItemR\x05items\"\x90\x02\n" +
+	"\x04Item\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
+	"\vdescription\x18\x03 \x01(\tR\vdescription\x12\x1b\n" +
+	"\timage_url\x18\x04 \x01(\tR\bimageUrl\x12\x14\n" +
+	"\x05price\x18\x05 \x01(\x05R\x05price\x12\x19\n" +
+	"\bin_stock\x18\x06 \x01(\x05R\ainStock\x129\n" +
+	"\n" +
+	"created_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
+	"\n" +
+	"updated_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\"E\n" +
+	"\x0eAddItemRequest\x12\x17\n" +
+	"\aitem_id\x18\x01 \x01(\tR\x06itemId\x12\x1a\n" +
+	"\bquantity\x18\x02 \x01(\x05R\bquantity\",\n" +
+	"\x11RemoveItemRequest\x12\x17\n" +
+	"\aitem_id\x18\x01 \x01(\tR\x06itemId\"\x8c\x01\n" +
+	"\x0fGetCartResponse\x121\n" +
+	"\x05items\x18\x01 \x03(\v2\x1b.merch_store.api.merch.ItemR\x05items\x12%\n" +
+	"\x0etotal_quantity\x18\x02 \x01(\x05R\rtotalQuantity\x12\x1f\n" +
+	"\vtotal_price\x18\x03 \x01(\x05R\n" +
+	"totalPrice\"^\n" +
+	"\x14GetCartTotalResponse\x12%\n" +
+	"\x0etotal_quantity\x18\x01 \x01(\x05R\rtotalQuantity\x12\x1f\n" +
+	"\vtotal_price\x18\x02 \x01(\x05R\n" +
+	"totalPrice2\xc3\x03\n" +
 	"\vUserService\x12q\n" +
 	"\n" +
 	"CreateUser\x12(.merch_store.api.merch.CreateUserRequest\x1a#.merch_store.api.merch.UserResponse\"\x14\x82\xd3\xe4\x93\x02\x0e:\x01*\"\t/v1/users\x12r\n" +
@@ -1045,12 +1462,26 @@ const file_merch_merch_proto_rawDesc = "" +
 	"\vAuthService\x12m\n" +
 	"\x05Login\x12#.merch_store.api.merch.LoginRequest\x1a$.merch_store.api.merch.LoginResponse\"\x19\x82\xd3\xe4\x93\x02\x13:\x01*\"\x0e/v1/auth/login\x12u\n" +
 	"\aRefresh\x12%.merch_store.api.merch.RefreshRequest\x1a&.merch_store.api.merch.RefreshResponse\"\x1b\x82\xd3\xe4\x93\x02\x15:\x01*\"\x10/v1/auth/refresh\x12b\n" +
-	"\x06Logout\x12$.merch_store.api.merch.LogoutRequest\x1a\x16.google.protobuf.Empty\"\x1a\x82\xd3\xe4\x93\x02\x14:\x01*\"\x0f/v1/auth/logout2\xa9\x02\n" +
-	"\fMerchService\x12X\n" +
-	"\aGetInfo\x12\x16.google.protobuf.Empty\x1a#.merch_store.api.merch.InfoResponse\"\x10\x82\xd3\xe4\x93\x02\n" +
-	"\x12\b/v1/info\x12e\n" +
-	"\bSendCoin\x12&.merch_store.api.merch.SendCoinRequest\x1a\x16.google.protobuf.Empty\"\x19\x82\xd3\xe4\x93\x02\x13:\x01*\"\x0e/v1/coins/send\x12X\n" +
-	"\x03Buy\x12!.merch_store.api.merch.BuyRequest\x1a\x16.google.protobuf.Empty\"\x16\x82\xd3\xe4\x93\x02\x10\x12\x0e/v1/buy/{item}B\xd7\x01\x92A\xb6\x01\x125\n" +
+	"\x06Logout\x12$.merch_store.api.merch.LogoutRequest\x1a\x16.google.protobuf.Empty\"\x1a\x82\xd3\xe4\x93\x02\x14:\x01*\"\x0f/v1/auth/logout2\xbf\x04\n" +
+	"\fMerchService\x12v\n" +
+	"\n" +
+	"GetCatalog\x12(.merch_store.api.merch.GetCatalogRequest\x1a).merch_store.api.merch.GetCatalogResponse\"\x13\x82\xd3\xe4\x93\x02\r\"\v/v1/catalog\x12j\n" +
+	"\aGetItem\x12%.merch_store.api.merch.GetItemRequest\x1a\x1b.merch_store.api.merch.Item\"\x1b\x82\xd3\xe4\x93\x02\x15\x12\x13/v1/items/{item_id}\x12i\n" +
+	"\n" +
+	"CreateItem\x12(.merch_store.api.merch.CreateItemRequest\x1a\x1b.merch_store.api.merch.Item\"\x14\x82\xd3\xe4\x93\x02\x0e:\x01*\"\t/v1/items\x12s\n" +
+	"\n" +
+	"UpdateItem\x12(.merch_store.api.merch.UpdateItemRequest\x1a\x1b.merch_store.api.merch.Item\"\x1e\x82\xd3\xe4\x93\x02\x18:\x01*\x1a\x13/v1/items/{item_id}\x12k\n" +
+	"\n" +
+	"DeleteItem\x12(.merch_store.api.merch.DeleteItemRequest\x1a\x16.google.protobuf.Empty\"\x1b\x82\xd3\xe4\x93\x02\x15*\x13/v1/items/{item_id}2\xf1\x03\n" +
+	"\vCartService\x12]\n" +
+	"\aAddItem\x12%.merch_store.api.merch.AddItemRequest\x1a\x16.google.protobuf.Empty\"\x13\x82\xd3\xe4\x93\x02\r:\x01*\"\b/v1/cart\x12j\n" +
+	"\n" +
+	"RemoveItem\x12(.merch_store.api.merch.RemoveItemRequest\x1a\x16.google.protobuf.Empty\"\x1a\x82\xd3\xe4\x93\x02\x14*\x12/v1/cart/{item_id}\x12[\n" +
+	"\aGetCart\x12\x16.google.protobuf.Empty\x1a&.merch_store.api.merch.GetCartResponse\"\x10\x82\xd3\xe4\x93\x02\n" +
+	"\x12\b/v1/cart\x12M\n" +
+	"\tClearCart\x12\x16.google.protobuf.Empty\x1a\x16.google.protobuf.Empty\"\x10\x82\xd3\xe4\x93\x02\n" +
+	"*\b/v1/cart\x12k\n" +
+	"\fGetCartTotal\x12\x16.google.protobuf.Empty\x1a+.merch_store.api.merch.GetCartTotalResponse\"\x16\x82\xd3\xe4\x93\x02\x10\x12\x0e/v1/cart/totalB\xd7\x01\x92A\xb6\x01\x125\n" +
 	"\x0fMerch Store API\x12\x1bAPI for Merch Store service2\x051.0.0\"\x04/api*\x02\x01\x022\x10application/json:\x10application/jsonZA\n" +
 	"?\n" +
 	"\x06Bearer\x125\b\x02\x12\x1fBearer token for authentication\x1a\x0ex-access-token \x02b\f\n" +
@@ -1070,7 +1501,7 @@ func file_merch_merch_proto_rawDescGZIP() []byte {
 	return file_merch_merch_proto_rawDescData
 }
 
-var file_merch_merch_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
+var file_merch_merch_proto_msgTypes = make([]protoimpl.MessageInfo, 24)
 var file_merch_merch_proto_goTypes = []any{
 	(*User)(nil),                  // 0: merch_store.api.merch.User
 	(*CreateUserRequest)(nil),     // 1: merch_store.api.merch.CreateUserRequest
@@ -1084,51 +1515,72 @@ var file_merch_merch_proto_goTypes = []any{
 	(*RefreshRequest)(nil),        // 9: merch_store.api.merch.RefreshRequest
 	(*RefreshResponse)(nil),       // 10: merch_store.api.merch.RefreshResponse
 	(*LogoutRequest)(nil),         // 11: merch_store.api.merch.LogoutRequest
-	(*InfoResponse)(nil),          // 12: merch_store.api.merch.InfoResponse
-	(*InventoryItem)(nil),         // 13: merch_store.api.merch.InventoryItem
-	(*CoinHistory)(nil),           // 14: merch_store.api.merch.CoinHistory
-	(*CoinRecord)(nil),            // 15: merch_store.api.merch.CoinRecord
-	(*SendCoinRequest)(nil),       // 16: merch_store.api.merch.SendCoinRequest
-	(*BuyRequest)(nil),            // 17: merch_store.api.merch.BuyRequest
-	(*timestamppb.Timestamp)(nil), // 18: google.protobuf.Timestamp
-	(*emptypb.Empty)(nil),         // 19: google.protobuf.Empty
+	(*DeleteItemRequest)(nil),     // 12: merch_store.api.merch.DeleteItemRequest
+	(*UpdateItemRequest)(nil),     // 13: merch_store.api.merch.UpdateItemRequest
+	(*CreateItemRequest)(nil),     // 14: merch_store.api.merch.CreateItemRequest
+	(*GetItemRequest)(nil),        // 15: merch_store.api.merch.GetItemRequest
+	(*GetCatalogRequest)(nil),     // 16: merch_store.api.merch.GetCatalogRequest
+	(*Pagination)(nil),            // 17: merch_store.api.merch.Pagination
+	(*GetCatalogResponse)(nil),    // 18: merch_store.api.merch.GetCatalogResponse
+	(*Item)(nil),                  // 19: merch_store.api.merch.Item
+	(*AddItemRequest)(nil),        // 20: merch_store.api.merch.AddItemRequest
+	(*RemoveItemRequest)(nil),     // 21: merch_store.api.merch.RemoveItemRequest
+	(*GetCartResponse)(nil),       // 22: merch_store.api.merch.GetCartResponse
+	(*GetCartTotalResponse)(nil),  // 23: merch_store.api.merch.GetCartTotalResponse
+	(*timestamppb.Timestamp)(nil), // 24: google.protobuf.Timestamp
+	(*emptypb.Empty)(nil),         // 25: google.protobuf.Empty
 }
 var file_merch_merch_proto_depIdxs = []int32{
-	18, // 0: merch_store.api.merch.User.created_at:type_name -> google.protobuf.Timestamp
-	18, // 1: merch_store.api.merch.User.updated_at:type_name -> google.protobuf.Timestamp
+	24, // 0: merch_store.api.merch.User.created_at:type_name -> google.protobuf.Timestamp
+	24, // 1: merch_store.api.merch.User.updated_at:type_name -> google.protobuf.Timestamp
 	0,  // 2: merch_store.api.merch.UserResponse.user:type_name -> merch_store.api.merch.User
 	6,  // 3: merch_store.api.merch.LoginResponse.tokens:type_name -> merch_store.api.merch.TokensPair
 	6,  // 4: merch_store.api.merch.RefreshRequest.tokens:type_name -> merch_store.api.merch.TokensPair
 	6,  // 5: merch_store.api.merch.RefreshResponse.tokens:type_name -> merch_store.api.merch.TokensPair
-	13, // 6: merch_store.api.merch.InfoResponse.inventory:type_name -> merch_store.api.merch.InventoryItem
-	14, // 7: merch_store.api.merch.InfoResponse.coin_history:type_name -> merch_store.api.merch.CoinHistory
-	15, // 8: merch_store.api.merch.CoinHistory.received:type_name -> merch_store.api.merch.CoinRecord
-	15, // 9: merch_store.api.merch.CoinHistory.sent:type_name -> merch_store.api.merch.CoinRecord
-	1,  // 10: merch_store.api.merch.UserService.CreateUser:input_type -> merch_store.api.merch.CreateUserRequest
-	2,  // 11: merch_store.api.merch.UserService.GetUser:input_type -> merch_store.api.merch.GetUserRequest
-	19, // 12: merch_store.api.merch.UserService.GetMe:input_type -> google.protobuf.Empty
-	3,  // 13: merch_store.api.merch.UserService.UpdateUser:input_type -> merch_store.api.merch.UpdateUserRequest
-	7,  // 14: merch_store.api.merch.AuthService.Login:input_type -> merch_store.api.merch.LoginRequest
-	9,  // 15: merch_store.api.merch.AuthService.Refresh:input_type -> merch_store.api.merch.RefreshRequest
-	11, // 16: merch_store.api.merch.AuthService.Logout:input_type -> merch_store.api.merch.LogoutRequest
-	19, // 17: merch_store.api.merch.MerchService.GetInfo:input_type -> google.protobuf.Empty
-	16, // 18: merch_store.api.merch.MerchService.SendCoin:input_type -> merch_store.api.merch.SendCoinRequest
-	17, // 19: merch_store.api.merch.MerchService.Buy:input_type -> merch_store.api.merch.BuyRequest
-	5,  // 20: merch_store.api.merch.UserService.CreateUser:output_type -> merch_store.api.merch.UserResponse
-	5,  // 21: merch_store.api.merch.UserService.GetUser:output_type -> merch_store.api.merch.UserResponse
-	5,  // 22: merch_store.api.merch.UserService.GetMe:output_type -> merch_store.api.merch.UserResponse
-	5,  // 23: merch_store.api.merch.UserService.UpdateUser:output_type -> merch_store.api.merch.UserResponse
-	8,  // 24: merch_store.api.merch.AuthService.Login:output_type -> merch_store.api.merch.LoginResponse
-	10, // 25: merch_store.api.merch.AuthService.Refresh:output_type -> merch_store.api.merch.RefreshResponse
-	19, // 26: merch_store.api.merch.AuthService.Logout:output_type -> google.protobuf.Empty
-	12, // 27: merch_store.api.merch.MerchService.GetInfo:output_type -> merch_store.api.merch.InfoResponse
-	19, // 28: merch_store.api.merch.MerchService.SendCoin:output_type -> google.protobuf.Empty
-	19, // 29: merch_store.api.merch.MerchService.Buy:output_type -> google.protobuf.Empty
-	20, // [20:30] is the sub-list for method output_type
-	10, // [10:20] is the sub-list for method input_type
-	10, // [10:10] is the sub-list for extension type_name
-	10, // [10:10] is the sub-list for extension extendee
-	0,  // [0:10] is the sub-list for field type_name
+	17, // 6: merch_store.api.merch.GetCatalogRequest.pagination:type_name -> merch_store.api.merch.Pagination
+	19, // 7: merch_store.api.merch.GetCatalogResponse.items:type_name -> merch_store.api.merch.Item
+	24, // 8: merch_store.api.merch.Item.created_at:type_name -> google.protobuf.Timestamp
+	24, // 9: merch_store.api.merch.Item.updated_at:type_name -> google.protobuf.Timestamp
+	19, // 10: merch_store.api.merch.GetCartResponse.items:type_name -> merch_store.api.merch.Item
+	1,  // 11: merch_store.api.merch.UserService.CreateUser:input_type -> merch_store.api.merch.CreateUserRequest
+	2,  // 12: merch_store.api.merch.UserService.GetUser:input_type -> merch_store.api.merch.GetUserRequest
+	25, // 13: merch_store.api.merch.UserService.GetMe:input_type -> google.protobuf.Empty
+	3,  // 14: merch_store.api.merch.UserService.UpdateUser:input_type -> merch_store.api.merch.UpdateUserRequest
+	7,  // 15: merch_store.api.merch.AuthService.Login:input_type -> merch_store.api.merch.LoginRequest
+	9,  // 16: merch_store.api.merch.AuthService.Refresh:input_type -> merch_store.api.merch.RefreshRequest
+	11, // 17: merch_store.api.merch.AuthService.Logout:input_type -> merch_store.api.merch.LogoutRequest
+	16, // 18: merch_store.api.merch.MerchService.GetCatalog:input_type -> merch_store.api.merch.GetCatalogRequest
+	15, // 19: merch_store.api.merch.MerchService.GetItem:input_type -> merch_store.api.merch.GetItemRequest
+	14, // 20: merch_store.api.merch.MerchService.CreateItem:input_type -> merch_store.api.merch.CreateItemRequest
+	13, // 21: merch_store.api.merch.MerchService.UpdateItem:input_type -> merch_store.api.merch.UpdateItemRequest
+	12, // 22: merch_store.api.merch.MerchService.DeleteItem:input_type -> merch_store.api.merch.DeleteItemRequest
+	20, // 23: merch_store.api.merch.CartService.AddItem:input_type -> merch_store.api.merch.AddItemRequest
+	21, // 24: merch_store.api.merch.CartService.RemoveItem:input_type -> merch_store.api.merch.RemoveItemRequest
+	25, // 25: merch_store.api.merch.CartService.GetCart:input_type -> google.protobuf.Empty
+	25, // 26: merch_store.api.merch.CartService.ClearCart:input_type -> google.protobuf.Empty
+	25, // 27: merch_store.api.merch.CartService.GetCartTotal:input_type -> google.protobuf.Empty
+	5,  // 28: merch_store.api.merch.UserService.CreateUser:output_type -> merch_store.api.merch.UserResponse
+	5,  // 29: merch_store.api.merch.UserService.GetUser:output_type -> merch_store.api.merch.UserResponse
+	5,  // 30: merch_store.api.merch.UserService.GetMe:output_type -> merch_store.api.merch.UserResponse
+	5,  // 31: merch_store.api.merch.UserService.UpdateUser:output_type -> merch_store.api.merch.UserResponse
+	8,  // 32: merch_store.api.merch.AuthService.Login:output_type -> merch_store.api.merch.LoginResponse
+	10, // 33: merch_store.api.merch.AuthService.Refresh:output_type -> merch_store.api.merch.RefreshResponse
+	25, // 34: merch_store.api.merch.AuthService.Logout:output_type -> google.protobuf.Empty
+	18, // 35: merch_store.api.merch.MerchService.GetCatalog:output_type -> merch_store.api.merch.GetCatalogResponse
+	19, // 36: merch_store.api.merch.MerchService.GetItem:output_type -> merch_store.api.merch.Item
+	19, // 37: merch_store.api.merch.MerchService.CreateItem:output_type -> merch_store.api.merch.Item
+	19, // 38: merch_store.api.merch.MerchService.UpdateItem:output_type -> merch_store.api.merch.Item
+	25, // 39: merch_store.api.merch.MerchService.DeleteItem:output_type -> google.protobuf.Empty
+	25, // 40: merch_store.api.merch.CartService.AddItem:output_type -> google.protobuf.Empty
+	25, // 41: merch_store.api.merch.CartService.RemoveItem:output_type -> google.protobuf.Empty
+	22, // 42: merch_store.api.merch.CartService.GetCart:output_type -> merch_store.api.merch.GetCartResponse
+	25, // 43: merch_store.api.merch.CartService.ClearCart:output_type -> google.protobuf.Empty
+	23, // 44: merch_store.api.merch.CartService.GetCartTotal:output_type -> merch_store.api.merch.GetCartTotalResponse
+	28, // [28:45] is the sub-list for method output_type
+	11, // [11:28] is the sub-list for method input_type
+	11, // [11:11] is the sub-list for extension type_name
+	11, // [11:11] is the sub-list for extension extendee
+	0,  // [0:11] is the sub-list for field type_name
 }
 
 func init() { file_merch_merch_proto_init() }
@@ -1138,15 +1590,17 @@ func file_merch_merch_proto_init() {
 	}
 	file_merch_merch_proto_msgTypes[1].OneofWrappers = []any{}
 	file_merch_merch_proto_msgTypes[3].OneofWrappers = []any{}
+	file_merch_merch_proto_msgTypes[13].OneofWrappers = []any{}
+	file_merch_merch_proto_msgTypes[14].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_merch_merch_proto_rawDesc), len(file_merch_merch_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   18,
+			NumMessages:   24,
 			NumExtensions: 0,
-			NumServices:   3,
+			NumServices:   4,
 		},
 		GoTypes:           file_merch_merch_proto_goTypes,
 		DependencyIndexes: file_merch_merch_proto_depIdxs,

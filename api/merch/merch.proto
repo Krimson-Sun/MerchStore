@@ -185,61 +185,169 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
     ];
   }
 
-  // Сервисы и сообщения согласно Swagger-документации example.json
   service MerchService {
-    // Получение информации о монетах, инвентаре и истории транзакций
-    rpc GetInfo(google.protobuf.Empty) returns (InfoResponse) {
+    rpc GetCatalog(GetCatalogRequest) returns (GetCatalogResponse) {
       option (google.api.http) = {
-        get: "/v1/info"
+        post: "/v1/catalog"
       };
     }
-    // Отправка монет другому пользователю
-    rpc SendCoin(SendCoinRequest) returns (google.protobuf.Empty) {
+
+    rpc GetItem(GetItemRequest) returns (Item) {
       option (google.api.http) = {
-        post: "/v1/coins/send"
+        get: "/v1/items/{item_id}"
+      };
+    }
+
+    rpc CreateItem(CreateItemRequest) returns (Item) {
+      option (google.api.http) = {
+        post: "/v1/items"
         body: "*"
       };
     }
-    // Покупка предмета за монеты
-    rpc Buy(BuyRequest) returns (google.protobuf.Empty) {
+    
+    rpc UpdateItem(UpdateItemRequest) returns (Item) {
       option (google.api.http) = {
-        get: "/v1/buy/{item}"
+        put: "/v1/items/{item_id}"
+        body: "*"
+      };
+    }
+    
+    rpc DeleteItem(DeleteItemRequest) returns (google.protobuf.Empty) {
+      option (google.api.http) = {
+        delete: "/v1/items/{item_id}"
       };
     }
   }
 
-  // Ответ с информацией о монетах, инвентаре и истории транзакций
-  message InfoResponse {
-    int32 coins = 1;
-    repeated InventoryItem inventory = 2;
-    CoinHistory coin_history = 3;
+  message DeleteItemRequest {
+    string item_id = 1 [
+      (google.api.field_behavior) = REQUIRED
+    ];
   }
 
-  // Элемент инвентаря
-  message InventoryItem {
-    string type = 1;
+  message UpdateItemRequest {
+    string item_id = 1;
+    optional string name = 2;
+    optional string description = 3;
+    optional string image_url = 4;
+    optional int32 price = 5
+    [
+      (validate.rules).int32 = {
+        gt = 0
+      }
+    ];
+    optional int32 in_stock = 6
+    [
+      (validate.rules).int32 = {
+        gt = 0
+      }
+    ];
+  }
+
+  
+  message CreateItemRequest {
+    string name = 1 [
+      (google.api.field_behavior) = REQUIRED
+    ];
+    optional string description = 2;
+    string image_url = 3;
+    int32 price = 4
+    [
+      (validate.rules).int32 = {
+        gt = 0
+      }
+    ];
+    int32 in_stock = 5
+    [
+      (validate.rules).int32 = {
+        gt = 0
+      }
+    ];
+    } 
+  
+  message GetItemRequest {
+    string item_id = 1
+    [
+      (google.api.field_behavior) = REQUIRED
+    ];
+  }
+
+  message GetCatalogRequest {
+    Pagination pagination = 1;
+  }
+  
+  message Pagination {
+    int32 page = 1;
+    int32 size = 2;
+  }
+
+  message GetCatalogResponse {
+    repeated Item items = 1;
+  }
+
+  message Item {
+    string id = 1;
+    string name = 2;
+    string description = 3;
+    string image_url = 4;
+    int32 price = 5;
+    int32 in_stock = 6;
+    google.protobuf.Timestamp created_at = 7;
+    google.protobuf.Timestamp updated_at = 8;
+  }
+
+
+  service CartService {
+    rpc AddItem(AddItemRequest) returns (google.protobuf.Empty) {
+      option (google.api.http) = {
+        post: "/v1/cart"
+        body: "*"
+      };
+    }
+
+    rpc RemoveItem(RemoveItemRequest) returns (google.protobuf.Empty) {
+      option (google.api.http) = {
+        delete: "/v1/cart/{item_id}"
+      };
+    }
+    
+    rpc GetCart(google.protobuf.Empty) returns (GetCartResponse) {
+      option (google.api.http) = {
+        get: "/v1/cart"
+      };
+    }
+    
+    rpc ClearCart(google.protobuf.Empty) returns (google.protobuf.Empty) {
+      option (google.api.http) = {
+        delete: "/v1/cart"
+      };
+    }
+
+    rpc GetCartTotal(google.protobuf.Empty) returns (GetCartTotalResponse) {
+      option (google.api.http) = {
+        get: "/v1/cart/total"
+      };
+    }
+    }
+
+  message AddItemRequest {
+    string item_id = 1;
     int32 quantity = 2;
   }
 
-  // История транзакций монет
-  message CoinHistory {
-    repeated CoinRecord received = 1;
-    repeated CoinRecord sent = 2;
+  message RemoveItemRequest {
+    string item_id = 1;
   }
 
-  // Запись о транзакции монет
-  message CoinRecord {
-    string user = 1;
-    int32 amount = 2;
+  message GetCartResponse {
+    repeated Item items = 1;
+    int32 total_quantity = 2;
+    int32 total_price = 3;
   }
 
-  // Запрос на отправку монет
-  message SendCoinRequest {
-    string to_user = 1 [(google.api.field_behavior) = REQUIRED];
-    int32 amount = 2 [(google.api.field_behavior) = REQUIRED];
+  message GetCartTotalResponse {
+    int32 total_quantity = 1;
+    int32 total_price = 2;
   }
-
-  // Запрос на покупку предмета
-  message BuyRequest {
-    string item = 1 [(google.api.field_behavior) = REQUIRED];
-  }
+  
+  

@@ -124,7 +124,7 @@ func (a *App) Run(ctx context.Context) error {
 	srv := grpc.NewServer(
 		grpc.ChainUnaryInterceptor(
 			interceptors.TracingInterceptor,
-			interceptors.RecovertInterceptor,
+			interceptors.RecoveryInterceptor,
 			interceptors.NewAuth(
 				a.authService,
 				map[string]struct{}{
@@ -152,7 +152,7 @@ func (a *App) Run(ctx context.Context) error {
 		reflection.Register(srv)
 	}
 
-	// Create gatewayx
+	// Create gateways
 	gatewayMux := runtime.NewServeMux(
 		runtime.WithIncomingHeaderMatcher(CustomMatcher),
 	)

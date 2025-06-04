@@ -253,8 +253,11 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AuthServiceClient interface {
+	// Метод для получения токенов доступа и обновления
 	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
+	// Метод для обновления токенов доступа и обновления
 	Refresh(ctx context.Context, in *RefreshRequest, opts ...grpc.CallOption) (*RefreshResponse, error)
+	// Метод для инвалидации токена обновления
 	Logout(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
@@ -300,8 +303,11 @@ func (c *authServiceClient) Logout(ctx context.Context, in *LogoutRequest, opts 
 // All implementations must embed UnimplementedAuthServiceServer
 // for forward compatibility.
 type AuthServiceServer interface {
+	// Метод для получения токенов доступа и обновления
 	Login(context.Context, *LoginRequest) (*LoginResponse, error)
+	// Метод для обновления токенов доступа и обновления
 	Refresh(context.Context, *RefreshRequest) (*RefreshResponse, error)
+	// Метод для инвалидации токена обновления
 	Logout(context.Context, *LogoutRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedAuthServiceServer()
 }
@@ -422,23 +428,22 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	MerchService_GetInfo_FullMethodName  = "/merch_store.api.merch.MerchService/GetInfo"
-	MerchService_SendCoin_FullMethodName = "/merch_store.api.merch.MerchService/SendCoin"
-	MerchService_Buy_FullMethodName      = "/merch_store.api.merch.MerchService/Buy"
+	MerchService_GetCatalog_FullMethodName = "/merch_store.api.merch.MerchService/GetCatalog"
+	MerchService_GetItem_FullMethodName    = "/merch_store.api.merch.MerchService/GetItem"
+	MerchService_CreateItem_FullMethodName = "/merch_store.api.merch.MerchService/CreateItem"
+	MerchService_UpdateItem_FullMethodName = "/merch_store.api.merch.MerchService/UpdateItem"
+	MerchService_DeleteItem_FullMethodName = "/merch_store.api.merch.MerchService/DeleteItem"
 )
 
 // MerchServiceClient is the client API for MerchService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-//
-// Сервисы и сообщения согласно Swagger-документации example.json
 type MerchServiceClient interface {
-	// Получение информации о монетах, инвентаре и истории транзакций
-	GetInfo(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*InfoResponse, error)
-	// Отправка монет другому пользователю
-	SendCoin(ctx context.Context, in *SendCoinRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	// Покупка предмета за монеты
-	Buy(ctx context.Context, in *BuyRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	GetCatalog(ctx context.Context, in *GetCatalogRequest, opts ...grpc.CallOption) (*GetCatalogResponse, error)
+	GetItem(ctx context.Context, in *GetItemRequest, opts ...grpc.CallOption) (*Item, error)
+	CreateItem(ctx context.Context, in *CreateItemRequest, opts ...grpc.CallOption) (*Item, error)
+	UpdateItem(ctx context.Context, in *UpdateItemRequest, opts ...grpc.CallOption) (*Item, error)
+	DeleteItem(ctx context.Context, in *DeleteItemRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type merchServiceClient struct {
@@ -449,30 +454,50 @@ func NewMerchServiceClient(cc grpc.ClientConnInterface) MerchServiceClient {
 	return &merchServiceClient{cc}
 }
 
-func (c *merchServiceClient) GetInfo(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*InfoResponse, error) {
+func (c *merchServiceClient) GetCatalog(ctx context.Context, in *GetCatalogRequest, opts ...grpc.CallOption) (*GetCatalogResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(InfoResponse)
-	err := c.cc.Invoke(ctx, MerchService_GetInfo_FullMethodName, in, out, cOpts...)
+	out := new(GetCatalogResponse)
+	err := c.cc.Invoke(ctx, MerchService_GetCatalog_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *merchServiceClient) SendCoin(ctx context.Context, in *SendCoinRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *merchServiceClient) GetItem(ctx context.Context, in *GetItemRequest, opts ...grpc.CallOption) (*Item, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, MerchService_SendCoin_FullMethodName, in, out, cOpts...)
+	out := new(Item)
+	err := c.cc.Invoke(ctx, MerchService_GetItem_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *merchServiceClient) Buy(ctx context.Context, in *BuyRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *merchServiceClient) CreateItem(ctx context.Context, in *CreateItemRequest, opts ...grpc.CallOption) (*Item, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Item)
+	err := c.cc.Invoke(ctx, MerchService_CreateItem_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *merchServiceClient) UpdateItem(ctx context.Context, in *UpdateItemRequest, opts ...grpc.CallOption) (*Item, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Item)
+	err := c.cc.Invoke(ctx, MerchService_UpdateItem_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *merchServiceClient) DeleteItem(ctx context.Context, in *DeleteItemRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, MerchService_Buy_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, MerchService_DeleteItem_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -482,15 +507,12 @@ func (c *merchServiceClient) Buy(ctx context.Context, in *BuyRequest, opts ...gr
 // MerchServiceServer is the server API for MerchService service.
 // All implementations must embed UnimplementedMerchServiceServer
 // for forward compatibility.
-//
-// Сервисы и сообщения согласно Swagger-документации example.json
 type MerchServiceServer interface {
-	// Получение информации о монетах, инвентаре и истории транзакций
-	GetInfo(context.Context, *emptypb.Empty) (*InfoResponse, error)
-	// Отправка монет другому пользователю
-	SendCoin(context.Context, *SendCoinRequest) (*emptypb.Empty, error)
-	// Покупка предмета за монеты
-	Buy(context.Context, *BuyRequest) (*emptypb.Empty, error)
+	GetCatalog(context.Context, *GetCatalogRequest) (*GetCatalogResponse, error)
+	GetItem(context.Context, *GetItemRequest) (*Item, error)
+	CreateItem(context.Context, *CreateItemRequest) (*Item, error)
+	UpdateItem(context.Context, *UpdateItemRequest) (*Item, error)
+	DeleteItem(context.Context, *DeleteItemRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedMerchServiceServer()
 }
 
@@ -501,14 +523,20 @@ type MerchServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedMerchServiceServer struct{}
 
-func (UnimplementedMerchServiceServer) GetInfo(context.Context, *emptypb.Empty) (*InfoResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetInfo not implemented")
+func (UnimplementedMerchServiceServer) GetCatalog(context.Context, *GetCatalogRequest) (*GetCatalogResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCatalog not implemented")
 }
-func (UnimplementedMerchServiceServer) SendCoin(context.Context, *SendCoinRequest) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SendCoin not implemented")
+func (UnimplementedMerchServiceServer) GetItem(context.Context, *GetItemRequest) (*Item, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetItem not implemented")
 }
-func (UnimplementedMerchServiceServer) Buy(context.Context, *BuyRequest) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Buy not implemented")
+func (UnimplementedMerchServiceServer) CreateItem(context.Context, *CreateItemRequest) (*Item, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateItem not implemented")
+}
+func (UnimplementedMerchServiceServer) UpdateItem(context.Context, *UpdateItemRequest) (*Item, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateItem not implemented")
+}
+func (UnimplementedMerchServiceServer) DeleteItem(context.Context, *DeleteItemRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteItem not implemented")
 }
 func (UnimplementedMerchServiceServer) mustEmbedUnimplementedMerchServiceServer() {}
 func (UnimplementedMerchServiceServer) testEmbeddedByValue()                      {}
@@ -531,56 +559,92 @@ func RegisterMerchServiceServer(s grpc.ServiceRegistrar, srv MerchServiceServer)
 	s.RegisterService(&MerchService_ServiceDesc, srv)
 }
 
-func _MerchService_GetInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+func _MerchService_GetCatalog_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetCatalogRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MerchServiceServer).GetInfo(ctx, in)
+		return srv.(MerchServiceServer).GetCatalog(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: MerchService_GetInfo_FullMethodName,
+		FullMethod: MerchService_GetCatalog_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MerchServiceServer).GetInfo(ctx, req.(*emptypb.Empty))
+		return srv.(MerchServiceServer).GetCatalog(ctx, req.(*GetCatalogRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _MerchService_SendCoin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SendCoinRequest)
+func _MerchService_GetItem_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetItemRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MerchServiceServer).SendCoin(ctx, in)
+		return srv.(MerchServiceServer).GetItem(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: MerchService_SendCoin_FullMethodName,
+		FullMethod: MerchService_GetItem_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MerchServiceServer).SendCoin(ctx, req.(*SendCoinRequest))
+		return srv.(MerchServiceServer).GetItem(ctx, req.(*GetItemRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _MerchService_Buy_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(BuyRequest)
+func _MerchService_CreateItem_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateItemRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MerchServiceServer).Buy(ctx, in)
+		return srv.(MerchServiceServer).CreateItem(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: MerchService_Buy_FullMethodName,
+		FullMethod: MerchService_CreateItem_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MerchServiceServer).Buy(ctx, req.(*BuyRequest))
+		return srv.(MerchServiceServer).CreateItem(ctx, req.(*CreateItemRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MerchService_UpdateItem_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateItemRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MerchServiceServer).UpdateItem(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MerchService_UpdateItem_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MerchServiceServer).UpdateItem(ctx, req.(*UpdateItemRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MerchService_DeleteItem_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteItemRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MerchServiceServer).DeleteItem(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MerchService_DeleteItem_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MerchServiceServer).DeleteItem(ctx, req.(*DeleteItemRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -593,16 +657,278 @@ var MerchService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*MerchServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "GetInfo",
-			Handler:    _MerchService_GetInfo_Handler,
+			MethodName: "GetCatalog",
+			Handler:    _MerchService_GetCatalog_Handler,
 		},
 		{
-			MethodName: "SendCoin",
-			Handler:    _MerchService_SendCoin_Handler,
+			MethodName: "GetItem",
+			Handler:    _MerchService_GetItem_Handler,
 		},
 		{
-			MethodName: "Buy",
-			Handler:    _MerchService_Buy_Handler,
+			MethodName: "CreateItem",
+			Handler:    _MerchService_CreateItem_Handler,
+		},
+		{
+			MethodName: "UpdateItem",
+			Handler:    _MerchService_UpdateItem_Handler,
+		},
+		{
+			MethodName: "DeleteItem",
+			Handler:    _MerchService_DeleteItem_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "merch/merch.proto",
+}
+
+const (
+	CartService_AddItem_FullMethodName      = "/merch_store.api.merch.CartService/AddItem"
+	CartService_RemoveItem_FullMethodName   = "/merch_store.api.merch.CartService/RemoveItem"
+	CartService_GetCart_FullMethodName      = "/merch_store.api.merch.CartService/GetCart"
+	CartService_ClearCart_FullMethodName    = "/merch_store.api.merch.CartService/ClearCart"
+	CartService_GetCartTotal_FullMethodName = "/merch_store.api.merch.CartService/GetCartTotal"
+)
+
+// CartServiceClient is the client API for CartService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type CartServiceClient interface {
+	AddItem(ctx context.Context, in *AddItemRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	RemoveItem(ctx context.Context, in *RemoveItemRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	GetCart(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetCartResponse, error)
+	ClearCart(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	GetCartTotal(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetCartTotalResponse, error)
+}
+
+type cartServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewCartServiceClient(cc grpc.ClientConnInterface) CartServiceClient {
+	return &cartServiceClient{cc}
+}
+
+func (c *cartServiceClient) AddItem(ctx context.Context, in *AddItemRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, CartService_AddItem_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *cartServiceClient) RemoveItem(ctx context.Context, in *RemoveItemRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, CartService_RemoveItem_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *cartServiceClient) GetCart(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetCartResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetCartResponse)
+	err := c.cc.Invoke(ctx, CartService_GetCart_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *cartServiceClient) ClearCart(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, CartService_ClearCart_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *cartServiceClient) GetCartTotal(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetCartTotalResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetCartTotalResponse)
+	err := c.cc.Invoke(ctx, CartService_GetCartTotal_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// CartServiceServer is the server API for CartService service.
+// All implementations must embed UnimplementedCartServiceServer
+// for forward compatibility.
+type CartServiceServer interface {
+	AddItem(context.Context, *AddItemRequest) (*emptypb.Empty, error)
+	RemoveItem(context.Context, *RemoveItemRequest) (*emptypb.Empty, error)
+	GetCart(context.Context, *emptypb.Empty) (*GetCartResponse, error)
+	ClearCart(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
+	GetCartTotal(context.Context, *emptypb.Empty) (*GetCartTotalResponse, error)
+	mustEmbedUnimplementedCartServiceServer()
+}
+
+// UnimplementedCartServiceServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedCartServiceServer struct{}
+
+func (UnimplementedCartServiceServer) AddItem(context.Context, *AddItemRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddItem not implemented")
+}
+func (UnimplementedCartServiceServer) RemoveItem(context.Context, *RemoveItemRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveItem not implemented")
+}
+func (UnimplementedCartServiceServer) GetCart(context.Context, *emptypb.Empty) (*GetCartResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCart not implemented")
+}
+func (UnimplementedCartServiceServer) ClearCart(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ClearCart not implemented")
+}
+func (UnimplementedCartServiceServer) GetCartTotal(context.Context, *emptypb.Empty) (*GetCartTotalResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCartTotal not implemented")
+}
+func (UnimplementedCartServiceServer) mustEmbedUnimplementedCartServiceServer() {}
+func (UnimplementedCartServiceServer) testEmbeddedByValue()                     {}
+
+// UnsafeCartServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to CartServiceServer will
+// result in compilation errors.
+type UnsafeCartServiceServer interface {
+	mustEmbedUnimplementedCartServiceServer()
+}
+
+func RegisterCartServiceServer(s grpc.ServiceRegistrar, srv CartServiceServer) {
+	// If the following call pancis, it indicates UnimplementedCartServiceServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&CartService_ServiceDesc, srv)
+}
+
+func _CartService_AddItem_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddItemRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CartServiceServer).AddItem(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CartService_AddItem_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CartServiceServer).AddItem(ctx, req.(*AddItemRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CartService_RemoveItem_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemoveItemRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CartServiceServer).RemoveItem(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CartService_RemoveItem_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CartServiceServer).RemoveItem(ctx, req.(*RemoveItemRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CartService_GetCart_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CartServiceServer).GetCart(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CartService_GetCart_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CartServiceServer).GetCart(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CartService_ClearCart_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CartServiceServer).ClearCart(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CartService_ClearCart_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CartServiceServer).ClearCart(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CartService_GetCartTotal_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CartServiceServer).GetCartTotal(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CartService_GetCartTotal_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CartServiceServer).GetCartTotal(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// CartService_ServiceDesc is the grpc.ServiceDesc for CartService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var CartService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "merch_store.api.merch.CartService",
+	HandlerType: (*CartServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "AddItem",
+			Handler:    _CartService_AddItem_Handler,
+		},
+		{
+			MethodName: "RemoveItem",
+			Handler:    _CartService_RemoveItem_Handler,
+		},
+		{
+			MethodName: "GetCart",
+			Handler:    _CartService_GetCart_Handler,
+		},
+		{
+			MethodName: "ClearCart",
+			Handler:    _CartService_ClearCart_Handler,
+		},
+		{
+			MethodName: "GetCartTotal",
+			Handler:    _CartService_GetCartTotal_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
